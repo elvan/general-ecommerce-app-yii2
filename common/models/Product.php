@@ -6,34 +6,50 @@ use Yii;
 use common\models\CartItem;
 use common\models\OrderItem;
 use common\models\User;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\helpers\FileHelper;
 
 /**
  * This is the model class for table "{{%products}}".
  *
- * @property int $id
- * @property string $name
- * @property string|null $description
- * @property string|null $image
- * @property float $price
- * @property int $status
- * @property int|null $created_at
- * @property int|null $updated_at
- * @property int|null $created_by
- * @property int|null $updated_by
+ * @property int          $id
+ * @property string       $name
+ * @property string|null  $description
+ * @property string|null  $image
+ * @property float        $price
+ * @property int          $status
+ * @property int|null     $created_at
+ * @property int|null     $updated_at
+ * @property int|null     $created_by
+ * @property int|null     $updated_by
  *
- * @property CartItems[] $cartItems
+ * @property CartItems[]  $cartItems
  * @property OrderItems[] $orderItems
- * @property User $createdBy
- * @property User $updatedBy
+ * @property User         $createdBy
+ * @property User         $updatedBy
  */
 class Product extends \yii\db\ActiveRecord
 {
+    /**
+     * @var \yii\web\UploadedFile
+     */
+    public $imageFile;
+
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
         return '{{%products}}';
+    }
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+            BlameableBehavior::class
+        ];
     }
 
     /**
@@ -45,6 +61,7 @@ class Product extends \yii\db\ActiveRecord
             [['name', 'price', 'status'], 'required'],
             [['description'], 'string'],
             [['price'], 'number'],
+            [['imageFile'], 'image', 'extensions' => 'png, jpg, jpeg, webp', 'maxSize' => 10 * 1024 * 1024],
             [['status', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['image'], 'string', 'max' => 2000],
@@ -63,6 +80,7 @@ class Product extends \yii\db\ActiveRecord
             'name' => 'Name',
             'description' => 'Description',
             'image' => 'Product Image',
+            'imageFile' => 'Product Image',
             'price' => 'Price',
             'status' => 'Published',
             'created_at' => 'Created At',
@@ -119,5 +137,34 @@ class Product extends \yii\db\ActiveRecord
     public static function find()
     {
         return new \common\models\query\ProductQuery(get_called_class());
+    }
+
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        if ($this->imageFile) {
+            $this->image = '/products/' . Yii::$app->security->generateRandomString() . '/' . $this->imageFile->name;
+        }
+
+        $transaction = Yii::$app->db->beginTransaction();
+        $ok = parent::save($runValidation, $attributeNames);
+
+        if ($ok) {
+            $fullPath = Yii::getAlias('@frontend/web/storage' . $this->image);
+            $dir = dirname($fullPath);
+            if (!FileHelper::createDirectory($dir) | !$this->imageFile->saveAs($fullPath)) {
+                $transaction->rollBack();
+
+                return false;
+            }
+
+            $transaction->commit();
+        }
+
+        return $ok;
+    }
+
+    public function getImageUrl()
+    {
+        return Yii::$app->params['frontendUrl'] . '/storage' . $this->image;
     }
 }
