@@ -50,7 +50,10 @@
                 "frontend/tests/",
                 "frontend/tests/_support"
             ]
-        }
+        },
+        "files": [
+            "common/helpers.php"
+        ]
     },
     "config": {
         "allow-plugins": {

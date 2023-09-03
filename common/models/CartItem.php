@@ -19,6 +19,8 @@ use common\models\User;
  */
 class CartItem extends \yii\db\ActiveRecord
 {
+    const SESSION_KEY = 'CART_ITEMS';
+
     /**
      * {@inheritdoc}
      */
