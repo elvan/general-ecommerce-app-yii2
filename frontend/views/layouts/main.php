@@ -1,15 +1,17 @@
 <?php
 
 /* @var $this \yii\web\View */
-
 /* @var $content string */
 
+use Yii;
 use common\widgets\Alert;
 use frontend\assets\AppAsset;
 use yii\bootstrap4\Nav;
 use yii\bootstrap4\NavBar;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
+
+$cartItemCount = $this->params['cartItemCount'];
 
 AppAsset::register($this);
 ?>
@@ -39,17 +41,33 @@ AppAsset::register($this);
             ],
         ]);
         $menuItems = [
-            ['label' => 'Home', 'url' => ['/site/index']],
+            [
+                'label' => 'Cart <span id="cart-quantity" class="badge badge-danger">' . $cartItemCount . '</span>',
+                'url' => ['/cart/index'],
+                'encode' => false
+            ],
         ];
         if (Yii::$app->user->isGuest) {
             $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
             $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
         } else {
             $menuItems[] = [
-                'label' => 'Logout (' . Yii::$app->user->identity->getDisplayName() . ')',
-                'url' => ['/site/logout'],
-                'linkOptions' => [
-                    'data-method' => 'post'
+                'label' => Yii::$app->user->identity->getDisplayName(),
+                //            'dropDownOptions' => [
+                //                'class' => 'dropdown-menu-right'
+                //            ],
+                'items' => [
+                    [
+                        'label' => 'Profile',
+                        'url' => ['/profile/index'],
+                    ],
+                    [
+                        'label' => 'Logout',
+                        'url' => ['/site/logout'],
+                        'linkOptions' => [
+                            'data-method' => 'post'
+                        ],
+                    ]
                 ]
             ];
         }
@@ -66,7 +84,7 @@ AppAsset::register($this);
         </div>
     </div>
 
-    <footer class="footer">
+    <footer class="footer mt-5">
         <div class="container">
             <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
 
