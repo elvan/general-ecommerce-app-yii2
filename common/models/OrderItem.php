@@ -16,8 +16,8 @@ use common\models\Product;
  * @property int $order_id
  * @property int $quantity
  *
- * @property Orders $order
- * @property Products $product
+ * @property Order $order
+ * @property Product $product
  */
 class OrderItem extends \yii\db\ActiveRecord
 {
@@ -62,7 +62,7 @@ class OrderItem extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Order]].
      *
-     * @return \yii\db\ActiveQuery|\common\models\query\OrdersQuery
+     * @return \yii\db\ActiveQuery|\common\models\query\OrderQuery
      */
     public function getOrder()
     {
@@ -72,7 +72,7 @@ class OrderItem extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Product]].
      *
-     * @return \yii\db\ActiveQuery|\common\models\query\ProductsQuery
+     * @return \yii\db\ActiveQuery|\common\models\query\ProductQuery
      */
     public function getProduct()
     {

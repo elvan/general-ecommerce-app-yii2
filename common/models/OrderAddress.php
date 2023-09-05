@@ -15,7 +15,7 @@ use common\models\Order;
  * @property string $country
  * @property string|null $zipcode
  *
- * @property Orders $order
+ * @property Order $order
  */
 class OrderAddress extends \yii\db\ActiveRecord
 {
@@ -59,7 +59,7 @@ class OrderAddress extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Order]].
      *
-     * @return \yii\db\ActiveQuery|\common\models\query\OrdersQuery
+     * @return \yii\db\ActiveQuery|\common\models\query\OrderQuery
      */
     public function getOrder()
     {
