@@ -12,9 +12,8 @@ use yii\bootstrap4\ActiveForm;
 ?>
 
 <?php $form = ActiveForm::begin([
-    'action' => [''],
+    'id' => 'checkout-form',
 ]); ?>
-
 <div class="row">
     <div class="col">
         <div class="card mb-3">
@@ -72,5 +71,4 @@ use yii\bootstrap4\ActiveForm;
         </div>
     </div>
 </div>
-
 <?php ActiveForm::end(); ?>
