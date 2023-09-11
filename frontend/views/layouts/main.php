@@ -3,7 +3,6 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-use Yii;
 use common\widgets\Alert;
 use frontend\assets\AppAsset;
 use yii\bootstrap4\Nav;
@@ -84,11 +83,17 @@ AppAsset::register($this);
         </div>
     </div>
 
-    <footer class="footer mt-5">
+    <footer class="footer">
         <div class="container">
-            <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
+            <div class="row">
+                <div class="col">
+                    <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
+                </div>
 
-            <p class="pull-right"><?= Yii::powered() ?></p>
+                <div class="col text-right">
+                    <p class="pull-right">Created by <a href="https://youtube.com/TheCodeholic" target="_blank">TheCodeholic</a></p>
+                </div>
+            </div>
         </div>
     </footer>
 
