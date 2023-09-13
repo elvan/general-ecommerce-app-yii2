@@ -3,10 +3,6 @@
 namespace common\models;
 
 use Yii;
-use common\models\CartItem;
-use common\models\OrderAddress;
-use common\models\OrderItem;
-use common\models\User;
 use yii\db\Exception;
 
 /**
@@ -30,8 +26,9 @@ use yii\db\Exception;
 class Order extends \yii\db\ActiveRecord
 {
     const STATUS_DRAFT = 0;
-    const STATUS_COMPLETED = 1;
-    const STATUS_FAILURED = 2;
+    const STATUS_PAID = 1;
+    const STATUS_FAILED = 2;
+    const STATUS_COMPLETED = 10;
 
     /**
      * {@inheritdoc}
@@ -49,6 +46,7 @@ class Order extends \yii\db\ActiveRecord
         return [
             [['total_price', 'status', 'firstname', 'lastname', 'email'], 'required'],
             [['total_price'], 'number'],
+            [['email'], 'email'],
             [['status', 'created_at', 'created_by'], 'integer'],
             [['firstname', 'lastname'], 'string', 'max' => 45],
             [['email', 'transaction_id', 'paypal_order_id'], 'string', 'max' => 255],
@@ -150,6 +148,7 @@ class Order extends \yii\db\ActiveRecord
         )->scalar();
     }
 
+
     public function sendEmailToVendor()
     {
         return Yii::$app
@@ -176,5 +175,15 @@ class Order extends \yii\db\ActiveRecord
             ->setTo($this->email)
             ->setSubject('Your orders is confirmed at ' . Yii::$app->name)
             ->send();
+    }
+
+    public static function getStatusLabels()
+    {
+        return [
+            self::STATUS_PAID => 'Paid',
+            self::STATUS_COMPLETED => 'Completed',
+            self::STATUS_FAILED => 'Failed',
+            self::STATUS_DRAFT => 'Draft'
+        ];
     }
 }

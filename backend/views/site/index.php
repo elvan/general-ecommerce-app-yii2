@@ -274,7 +274,6 @@ $this->title = 'My Yii Application';
 
     (function() {
 
-        debugger;
         // Pie Chart Example
         var ctx = document.getElementById("myPieChart");
         var myPieChart = new Chart(ctx, {
