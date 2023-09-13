@@ -3,7 +3,6 @@
 namespace common\models;
 
 use Yii;
-use common\models\User;
 use yii\base\Model;
 
 /**
@@ -15,7 +14,7 @@ class LoginForm extends Model
     public $password;
     public $rememberMe = true;
 
-    private $_user;
+    protected $_user;
 
 
     /**
