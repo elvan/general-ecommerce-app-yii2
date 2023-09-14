@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-
 use Yii;
 use common\models\User;
 use yii\filters\AccessControl;
@@ -18,7 +17,7 @@ class ProfileController extends \frontend\base\Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'updated-address', 'update-account'],
+                        'actions' => ['index', 'update-address', 'update-account'],
                         'allow' => true,
                         'roles' => ['@'],
                     ]
