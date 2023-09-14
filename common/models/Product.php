@@ -3,32 +3,28 @@
 namespace common\models;
 
 use Yii;
-use common\models\CartItem;
-use common\models\OrderItem;
-use common\models\User;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\FileHelper;
-use yii\helpers\StringHelper;
 
 /**
  * This is the model class for table "{{%products}}".
  *
- * @property int          $id
- * @property string       $name
- * @property string|null  $description
- * @property string|null  $image
- * @property float        $price
- * @property int          $status
- * @property int|null     $created_at
- * @property int|null     $updated_at
- * @property int|null     $created_by
- * @property int|null     $updated_by
+ * @property int         $id
+ * @property string      $name
+ * @property string|null $description
+ * @property string|null $image
+ * @property float       $price
+ * @property int         $status
+ * @property int|null    $created_at
+ * @property int|null    $updated_at
+ * @property int|null    $created_by
+ * @property int|null    $updated_by
  *
- * @property CartItems[]  $cartItems
- * @property OrderItems[] $orderItems
- * @property User         $createdBy
- * @property User         $updatedBy
+ * @property CartItem[]  $cartItems
+ * @property OrderItem[] $orderItems
+ * @property User        $createdBy
+ * @property User        $updatedBy
  */
 class Product extends \yii\db\ActiveRecord
 {
@@ -92,9 +88,9 @@ class Product extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[CartItems]].
+     * Gets query for [[CartItem]].
      *
-     * @return \yii\db\ActiveQuery|\common\models\query\CartItemsQuery
+     * @return \yii\db\ActiveQuery|\common\models\query\CartItemQuery
      */
     public function getCartItems()
     {
@@ -102,9 +98,9 @@ class Product extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[OrderItems]].
+     * Gets query for [[OrderItem]].
      *
-     * @return \yii\db\ActiveQuery|\common\models\query\OrderItemsQuery
+     * @return \yii\db\ActiveQuery|\common\models\query\OrderItemQuery
      */
     public function getOrderItems()
     {
@@ -187,5 +183,14 @@ class Product extends \yii\db\ActiveRecord
     public function getShortDescription()
     {
         return \yii\helpers\StringHelper::truncateWords(strip_tags($this->description), 30);
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+        if ($this->image) {
+            $dir = Yii::getAlias('@frontend/web/storage') . dirname($this->image);
+            FileHelper::removeDirectory($dir);
+        }
     }
 }
